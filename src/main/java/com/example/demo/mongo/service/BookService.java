@@ -3,6 +3,7 @@ package com.example.demo.mongo.service;
 import com.example.demo.mongo.model.Book;
 import com.example.demo.mongo.repository.BookRepo;
 import com.mongodb.client.result.UpdateResult;
+import com.sun.tools.jconsole.JConsoleContext;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -43,8 +44,16 @@ public class BookService {
         update.set("isbn",book.getIsbn());
 
         UpdateResult result=mongoTemplate.updateFirst(query,update,Book.class);
-        if(result==null){
+        System.out.println("result: "+result);
+        long modifiedDocuments=result.getModifiedCount();
+        long foundDocuments= result.getMatchedCount();
+        if (foundDocuments==0){
+            System.out.println("There is no document ID "+bookId);
+            return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+        }
+        if(modifiedDocuments==0){
             System.out.println("No documents updated");
+            return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
         }else{
             System.out.println(result.getModifiedCount());
         }
