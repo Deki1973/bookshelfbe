@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -108,4 +109,12 @@ public class BookService {
     }
 
 
+    public ResponseEntity<Optional<Book>> getById(String id){
+        Optional<Book> foundedBook=bookRepo.findById(id);
+        if (foundedBook.isEmpty() || foundedBook==null){
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(foundedBook,HttpStatus.OK);
+
+    }
 }

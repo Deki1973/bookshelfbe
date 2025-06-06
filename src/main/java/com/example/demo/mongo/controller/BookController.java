@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 // koristio sam materija sa https://www.mongodb.com/resources/products/compatibilities/spring-boot#update-using-mongotemplate
 
+@CrossOrigin
 @RestController
 @RequestMapping("/book")
 public class BookController {
@@ -22,6 +24,11 @@ public class BookController {
     @GetMapping("/getall")
     public ResponseEntity<List<Book>> getall(){
         return bookService.getall();
+    }
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<Optional<Book>> getById(@PathVariable String id){
+        return bookService.getById(id);
     }
 
     @GetMapping("/author/{author}")
