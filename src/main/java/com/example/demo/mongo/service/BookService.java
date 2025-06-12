@@ -1,5 +1,6 @@
 package com.example.demo.mongo.service;
 
+import com.example.demo.mongo.exception.BookException;
 import com.example.demo.mongo.model.Book;
 import com.example.demo.mongo.repository.BookRepo;
 import com.mongodb.client.result.UpdateResult;
@@ -69,7 +70,7 @@ public class BookService {
     }
 
     public ResponseEntity<List<Book>> getByAuthor(String author){
-        List foundedBooks=bookRepo.findAllByAuthorOrderByTitleAsc(author);
+        List foundedBooks=bookRepo.findAllByAuthorIgnoreCaseOrderByTitleAsc(author);
         if (foundedBooks.size()==0){
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
         }
@@ -77,7 +78,7 @@ public class BookService {
     }
 
     public ResponseEntity<List<Book>> getByTitle(String title){
-        List foundedBooks=bookRepo.findAllByTitleOrderByTitleAsc(title);
+        List foundedBooks=bookRepo.findAllByTitleIgnoreCaseOrderByTitleAsc(title);
         if (foundedBooks.size()==0){
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
         }
@@ -98,7 +99,7 @@ public class BookService {
         return new ResponseEntity<>(createdBook,HttpStatus.OK);
 
     }
-    public ResponseEntity<String> deleteBook(Book book){
+    public ResponseEntity<String> deleteBook(Book book) throws BookException{
         System.out.println("pozvan je servis deleteBook..");
         String bookId=book.getId();
         if(bookRepo.findById(bookId).isEmpty()==true){
@@ -109,7 +110,7 @@ public class BookService {
     }
 
 
-    public ResponseEntity<Optional<Book>> getById(String id){
+    public ResponseEntity<Optional<Book>> getById(String id) throws BookException {
         Optional<Book> foundedBook=bookRepo.findById(id);
         if (foundedBook.isEmpty() || foundedBook==null){
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);

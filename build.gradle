@@ -13,6 +13,10 @@ java {
 	}
 }
 
+bootJar {
+	archiveFileName = "bookshelf.jar"
+	mainClass='com.example.demo.mongo.Application'
+}
 repositories {
 	mavenCentral()
 }
