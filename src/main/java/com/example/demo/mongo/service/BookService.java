@@ -32,7 +32,7 @@ public class BookService {
     private BookRepo bookRepo;
 
 
-    public ResponseEntity<Book> updateBook(Book book){
+    public ResponseEntity<Book> updateBook(Book book) throws BookException{
         System.out.println("pozvan je servis updateBook...");
         String bookId=book.getId();
         Query query=new Query(Criteria.where("id").is(bookId));
@@ -42,7 +42,7 @@ public class BookService {
         update.set("title",book.getTitle());
         update.set("publisher",book.getPublisher());
         update.set("description",book.getDescription());
-        update.set("imageUlr",book.getImageUrl());
+        update.set("imageUrl",book.getImageUrl());//
         update.set("isbn",book.getIsbn());
 
         UpdateResult result=mongoTemplate.updateFirst(query,update,Book.class);
@@ -64,12 +64,12 @@ public class BookService {
     }
 
 
-    public ResponseEntity<List<Book>> getall(){
+    public ResponseEntity<List<Book>> getall() throws BookException{
         return new ResponseEntity<>(bookRepo.findAll(Sort.by(Sort.Direction.ASC,"title")), HttpStatus.OK);
 
     }
 
-    public ResponseEntity<List<Book>> getByAuthor(String author){
+    public ResponseEntity<List<Book>> getByAuthor(String author) throws BookException{
         List foundedBooks=bookRepo.findAllByAuthorIgnoreCaseOrderByTitleAsc(author);
         if (foundedBooks.size()==0){
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
@@ -77,7 +77,7 @@ public class BookService {
         return new ResponseEntity<>(foundedBooks,HttpStatus.OK);
     }
 
-    public ResponseEntity<List<Book>> getByTitle(String title){
+    public ResponseEntity<List<Book>> getByTitle(String title)throws BookException{
         List foundedBooks=bookRepo.findAllByTitleIgnoreCaseOrderByTitleAsc(title);
         if (foundedBooks.size()==0){
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
@@ -85,7 +85,7 @@ public class BookService {
         return new ResponseEntity<>(foundedBooks,HttpStatus.OK);
     }
 
-    public ResponseEntity<Book> getByIsbn(String isbn){
+    public ResponseEntity<Book> getByIsbn(String isbn) throws BookException{
         Book foundedBook=bookRepo.findAllByIsbn(isbn);
         if (foundedBook==null){
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
@@ -93,7 +93,7 @@ public class BookService {
         return new ResponseEntity<>(foundedBook,HttpStatus.OK);
     }
 
-    public ResponseEntity<Book> createBook(Book book){
+    public ResponseEntity<Book> createBook(Book book)throws BookException{
         System.out.println("pozvan je servis createBook...");
         Book createdBook=bookRepo.save(book);
         return new ResponseEntity<>(createdBook,HttpStatus.OK);
