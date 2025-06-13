@@ -44,7 +44,7 @@ public class BookController {
     }
 
     @GetMapping("/isbn/{isbn}")
-    public ResponseEntity<Book> getByIsbn(@PathVariable String isbn){
+    public ResponseEntity<Optional<Book>> getByIsbn(@PathVariable String isbn){
         System.out.println("pozvan je kontroler getByIsbn");
         return bookService.getByIsbn(isbn);
     }

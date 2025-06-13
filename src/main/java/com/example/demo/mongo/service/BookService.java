@@ -85,8 +85,8 @@ public class BookService {
         return new ResponseEntity<>(foundedBooks,HttpStatus.OK);
     }
 
-    public ResponseEntity<Book> getByIsbn(String isbn) throws BookException{
-        Book foundedBook=bookRepo.findAllByIsbn(isbn);
+    public ResponseEntity<Optional<Book>> getByIsbn(String isbn) throws BookException{
+        Optional<Book> foundedBook=bookRepo.findAllByIsbn(isbn);
         if (foundedBook==null){
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
         }
